@@ -1,4 +1,4 @@
 from maven
-add . /code
-workdir /code
+add . /code1
+workdir /code1
 run mvn clean install
