@@ -1,4 +1,4 @@
 from maven
 add . /code
 workdir /code
-run mvn clean package
+run mvn clean install
