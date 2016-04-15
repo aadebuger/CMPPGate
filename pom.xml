@@ -111,8 +111,8 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
+			
+ 		</resource>
 		</resources>
 
 		<plugins>
@@ -165,7 +165,9 @@
 				<configuration>
 					<excludes>
 						<exclude>**/*.xml</exclude>
+<!--
 						<exclude>**/*.properties</exclude>
+						-->
 					</excludes>
 				</configuration>
 
