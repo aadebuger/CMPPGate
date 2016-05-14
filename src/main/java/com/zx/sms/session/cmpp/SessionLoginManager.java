@@ -185,6 +185,7 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 
 	private void receiveConnectMessage(ChannelHandlerContext ctx, CmppConnectRequestMessage message) throws Exception {
 
+		System.out.println("receiveConnectMessage");
 		String userName = message.getSourceAddr();
 		// 通过用户名获取端口信息
 		CMPPServerChildEndpointEntity childentity = queryCMPPEndpointEntityInfoByUsername(userName);
