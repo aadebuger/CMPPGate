@@ -203,6 +203,7 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		int status = validClientMsg(message, childentity);
 		// 认证成功
 		if (status == 0) {
+			System.out.println("childentity getVersion="+childentity.getVersion());
 			//默认的是cmpp30的协议，如果不是cmpp30则要更换解析器版本
 			if ((short)0x30 != childentity.getVersion()) {
 				//发送ConnectRequest里的Version跟配置的不同
