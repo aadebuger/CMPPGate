@@ -57,6 +57,7 @@ public class CMPPCodecChannelInitializer extends ChannelInitializer<Channel> {
 	}
 
 	public static ChannelHandlerAdapter getCodecHandler(int version) throws Exception {
+		System.out.println("version = "+version);
 		if (version == 0x30L) {
 			return CMPPMessageCodecAggregator.getInstance();
 		} else if (version == 0x20L) {
