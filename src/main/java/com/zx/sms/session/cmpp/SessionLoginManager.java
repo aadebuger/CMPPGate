@@ -3,6 +3,7 @@ package com.zx.sms.session.cmpp;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
@@ -36,6 +37,8 @@ import com.zx.sms.connect.manager.cmpp.CMPPServerEndpointEntity;
 public class SessionLoginManager extends ChannelHandlerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(SessionLoginManager.class);
 
+
+	
 	private EndpointEntity entity;
 
 	// 如果是服务端，记录服务端口信息
@@ -188,6 +191,7 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		System.out.println("receiveConnectMessage");
 		String userName = message.getSourceAddr();
 		// 通过用户名获取端口信息
+		System.out.println("userName="+userName);
 		CMPPServerChildEndpointEntity childentity = queryCMPPEndpointEntityInfoByUsername(userName);
 		if (childentity == null) {
 			failedLogin(ctx, message, 3);
@@ -202,6 +206,7 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		short version = message.getVersion();
 		// 服务端收到Request，校验用户名密码成功
 		int status = validClientMsg(message, childentity);
+		ctx.attr(AttributeKey.valueOf("username")).set( userName);
 		// 认证成功
 		if (status == 0) {
 			System.out.println("childentity getVersion="+childentity.getVersion());
