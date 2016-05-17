@@ -65,6 +65,9 @@ public enum LongMessageFrameHolder {
 	 */
 	private ConcurrentHashMap<String, FrameHolder> map = new ConcurrentHashMap<String, FrameHolder>();
 
+
+	private ConcurrentHashMap<String, ArrayList> msgidmap = new ConcurrentHashMap<String, ArrayList>();
+	
 	private SmsMessage generatorSmsMessage(FrameHolder fh, LongMessageFrame frame) throws NotSupportedException {
 		byte[] contents = fh.mergeAllcontent();
 		InformationElement udheader = fh.getAppUDHinfo();
@@ -99,6 +102,11 @@ public enum LongMessageFrameHolder {
 		}
 	}
 
+	public void putMsgid(String serviceNum, LongMessageFrame frame,String msgidstr)
+	{
+			String mapKey = new StringBuilder().append(serviceNum).append(".").append(fh.frameKey).toString();
+				
+	}
 	/**
 	 * 获取一条完整的长短信，如果长短信组装未完成，返回null
 	 **/
