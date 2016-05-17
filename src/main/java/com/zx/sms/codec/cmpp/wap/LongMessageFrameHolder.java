@@ -104,7 +104,7 @@ public enum LongMessageFrameHolder {
 
 	public void putMsgid(String serviceNum, LongMessageFrame frame,String msgidstr)
 	{
-			String mapKey = new StringBuilder().append(serviceNum).append(".").append(fh.frameKey).toString();
+		//	String mapKey = new StringBuilder().append(serviceNum).append(".").append(fh.frameKey).toString();
 				
 	}
 	/**
