@@ -154,6 +154,59 @@ public enum LongMessageFrameHolder {
 		return null;
 
 	}
+	
+	public SmsMessage putAndgetandmsg(String serviceNum, LongMessageFrame frame,String msgidstring) throws NotSupportedException {
+
+		//assert (frame.getTppid() == 0);
+
+		// 短信内容不带协议头，直接获取短信内容
+		// udhi只取第一个bit
+		if (frame.getTpudhi() == 0) {
+			return CMPPCommonUtil.buildTextMessage(frame.getPayloadbytes(0), frame.getMsgfmt());
+
+		} else if ((frame.getTpudhi() & 0x01) == 1 || (frame.getTpudhi()&0x40)==0x40) {
+
+			FrameHolder fh = createFrameHolder(frame);
+			// 判断是否只有一帧
+			if (fh.isComplete()) {
+
+				return generatorSmsMessage(fh, frame);
+			}
+
+			// 超过一帧的，进行长短信合并
+			String mapKey = new StringBuilder().append(serviceNum).append(".").append(fh.frameKey).toString();
+
+			FrameHolder oldframeHolder = map.putIfAbsent(mapKey, fh);
+
+			if (oldframeHolder != null) {
+
+				mergeFrameHolder(oldframeHolder, frame);
+			} else {
+				oldframeHolder = fh;
+			}
+
+			if (oldframeHolder.isComplete()) {
+
+				map.remove(mapKey);
+
+				return generatorSmsMessage(oldframeHolder, frame);
+			}
+			ArrayList al1 = new ArrayList();
+			al1.add(msgidstring);
+			
+			ArrayList msgidlist = msgidmap.putIfAbsent(mapKey, al1 );
+			if ( msgidlist !=null)
+					msgidlist.add(msgidstring);
+					
+					
+		} else {
+			throw new NotSupportedException("Not Support LongMsg.Tpudhi");
+		}
+
+		
+		return null;
+
+	}
 
 	public List<LongMessageFrame> splitmsgcontent(SmsMessage content, boolean isSupportLongMsg) throws SmsException {
 
