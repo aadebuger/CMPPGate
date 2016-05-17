@@ -125,9 +125,9 @@ public class Cmpp20SubmitRequestMessageCodec extends MessageToMessageCodec<Messa
 				if (al !=null)
 				{
 					StringBuilder sb = new StringBuilder();
-					for (String s : al)
+					for (Object  s : al)
 					{
-					    sb.append(s);
+					    sb.append(s.toString());
 					    sb.append(",");
 					}
 					requestMessage.setLinkID(sb.toString());	
