@@ -10,6 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.util.ReferenceCountUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -112,17 +113,23 @@ public class Cmpp20SubmitRequestMessageCodec extends MessageToMessageCodec<Messa
 		frame.setMsgLength((short)msgLength);
 		requestMessage.setReserve(bodyBuffer.readBytes(Cmpp20SubmitRequest.RESERVE.getLength()).toString(GlobalConstance.defaultTransportCharset).trim());
 		ReferenceCountUtil.release(bodyBuffer);
+		MsgId msgid1 = new MsgId();
 		try {
-			SmsMessage content = LongMessageFrameHolder.INS.putAndget(StringUtils.join(destTermId, "|"), frame);
+	//		SmsMessage content = LongMessageFrameHolder.INS.putAndget(StringUtils.join(destTermId, "|"), frame);
+			SmsMessage content = LongMessageFrameHolder.INS.putAndgetandmsg(StringUtils.join(destTermId, "|"), frame,msgid1.toString());
 
 			if (content != null) {
 				requestMessage.setMsgContent(content);
+				ArrayList al = LongMessageFrameHolder.INS.getMsgid(StringUtils.join(destTermId, "|"), frame);
+				System.out.println("al="+al);
+				
 				out.add(requestMessage);
 			} else {
 
 				CmppSubmitResponseMessage responseMessage = new CmppSubmitResponseMessage(msg.getHeader());
 
-				responseMessage.setMsgId(requestMessage.getMsgid());
+		//		responseMessage.setMsgId(requestMessage.getMsgid());
+				responseMessage.setMsgId(msgid1);
 				responseMessage.setResult(0);
 				ctx.channel().writeAndFlush(responseMessage);
 			}
