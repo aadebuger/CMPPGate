@@ -117,15 +117,20 @@ public class CmppSubmitRequestMessageCodec extends MessageToMessageCodec<Message
 
 		
 
+		MsgId msgid1 = new MsgId();
+		
 		try {
-			SmsMessage content = LongMessageFrameHolder.INS.putAndget(StringUtils.join(destTermId, "|"), frame);
+	//		SmsMessage content = LongMessageFrameHolder.INS.putAndget(StringUtils.join(destTermId, "|"), frame);
+			SmsMessage content = LongMessageFrameHolder.INS.putAndgetandmsg(StringUtils.join(destTermId, "|"), frame,msgid1.toString());
 
 			if (content != null) {
 				requestMessage.setMsgContent(content);
 				out.add(requestMessage);
 			} else {
 				CmppSubmitResponseMessage responseMessage = new CmppSubmitResponseMessage(msg.getHeader());
-				responseMessage.setMsgId(new MsgId());
+			//	responseMessage.setMsgId(new MsgId());
+				responseMessage.setMsgId(msgid1);
+				
 				responseMessage.setResult(0);
 				ctx.channel().writeAndFlush(responseMessage);
 			}
