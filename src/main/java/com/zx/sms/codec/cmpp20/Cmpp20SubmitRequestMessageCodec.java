@@ -122,7 +122,16 @@ public class Cmpp20SubmitRequestMessageCodec extends MessageToMessageCodec<Messa
 				requestMessage.setMsgContent(content);
 				ArrayList al = LongMessageFrameHolder.INS.getMsgid(StringUtils.join(destTermId, "|"), frame);
 				System.out.println("al="+al);
-				
+				if (al !=null)
+				{
+					StringBuilder sb = new StringBuilder();
+					for (String s : al)
+					{
+					    sb.append(s);
+					    sb.append(",");
+					}
+					requestMessage.setLinkID(sb.toString());	
+				}
 				out.add(requestMessage);
 			} else {
 
