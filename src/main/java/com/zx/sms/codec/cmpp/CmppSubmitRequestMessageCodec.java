@@ -10,6 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.util.ReferenceCountUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -125,6 +126,9 @@ public class CmppSubmitRequestMessageCodec extends MessageToMessageCodec<Message
 
 			if (content != null) {
 				requestMessage.setMsgContent(content);
+				ArrayList al = LongMessageFrameHolder.INS.getMsgid(StringUtils.join(destTermId, "|"), frame);
+				System.out.println("al="+al);
+				
 				out.add(requestMessage);
 			} else {
 				CmppSubmitResponseMessage responseMessage = new CmppSubmitResponseMessage(msg.getHeader());
