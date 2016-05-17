@@ -108,22 +108,29 @@ public enum LongMessageFrameHolder {
 				
 	}
 	public ArrayList  getMsgid( String serviceNum,LongMessageFrame frame )
+			
 	{
+		
 		// udhi只取第一个bit
 				if (frame.getTpudhi() == 0) {
 					return null;
 
 				} else if ((frame.getTpudhi() & 0x01) == 1 || (frame.getTpudhi()&0x40)==0x40) {
 
+					try {
 					FrameHolder fh = createFrameHolder(frame);
 					// 判断是否只有一帧
-				
-
-				
 					// 超过一帧的，进行长短信合并
 					String mapKey = new StringBuilder().append(serviceNum).append(".").append(fh.frameKey).toString();
 
 					return msgidmap.get(mapKey);
+					}
+					catch (Exception e)
+					{
+						System.out.println("e="+e);
+						return null;
+					}
+
 					}
 					return null;
 	}
