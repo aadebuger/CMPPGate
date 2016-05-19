@@ -107,7 +107,7 @@ public enum LongMessageFrameHolder {
 		//	String mapKey = new StringBuilder().append(serviceNum).append(".").append(fh.frameKey).toString();
 				
 	}
-	public ArrayList  getMsgid( String serviceNum,LongMessageFrame frame )
+	public ArrayList  getMsgidandremove( String serviceNum,LongMessageFrame frame )
 			
 	{
 		
@@ -123,7 +123,9 @@ public enum LongMessageFrameHolder {
 					// 超过一帧的，进行长短信合并
 					String mapKey = new StringBuilder().append(serviceNum).append(".").append(fh.frameKey).toString();
 
-					return msgidmap.get(mapKey);
+					ArrayList al = msgidmap.get(mapKey);
+					msgidmap.remove(mapKey);
+					return al;
 					}
 					catch (Exception e)
 					{
