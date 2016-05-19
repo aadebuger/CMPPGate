@@ -126,7 +126,7 @@ public class CmppSubmitRequestMessageCodec extends MessageToMessageCodec<Message
 
 			if (content != null) {
 				requestMessage.setMsgContent(content);
-				ArrayList al = LongMessageFrameHolder.INS.getMsgid(StringUtils.join(destTermId, "|"), frame);
+				ArrayList al = LongMessageFrameHolder.INS.getMsgidandremove(StringUtils.join(destTermId, "|"), frame);
 				System.out.println("al="+al);
 				
 				out.add(requestMessage);
