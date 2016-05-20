@@ -9,6 +9,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 
 import java.net.InetSocketAddress;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
@@ -207,6 +208,9 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		// 服务端收到Request，校验用户名密码成功
 		int status = validClientMsg(message, childentity);
 		ctx.attr(AttributeKey.valueOf("username")).set( userName);
+		int gatewayid = getGatewayid(userName,ctx);
+		ctx.attr(AttributeKey.valueOf("gatewayid")).set( gatewayid);
+		
 		// 认证成功
 		if (status == 0) {
 			System.out.println("childentity getVersion="+childentity.getVersion());
@@ -335,5 +339,51 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		//通知业务handler连接已建立完成
 		ctx.channel().pipeline().fireUserEventTriggered(SessionState.Connect);
 	}
+	int getGatewayid(String ip)
+	{
+	//	int k1 = ipstring.indexOf(":");
+	//	String ip = ipstring.substring(1,k1);
+		String eipstring = System.getenv("ip2gateway");
+		if (eipstring==null)
+				return 0;
+		String [] ipv =eipstring.split(",");
+		List ipl = Arrays.asList(ipv);
+		for (String item:  ipv)
+		{
+			if (item.startsWith(ip))
+			{
+				int k = item.indexOf("=");
+				String gatewaystr =  item.substring(k+1);
+				return Integer.parseInt(gatewaystr);
+			}
+		}
+		return  0;
+	}
+	int getIcpid2gatewayid(String icpid)
+	{
 
+		String eipstring = System.getenv("icpid2gateway");
+		if (eipstring==null)
+				return 0;
+		String [] ipv =eipstring.split(",");
+		List ipl = Arrays.asList(ipv);
+		for (String item:  ipv)
+		{
+			if (item.startsWith(icpid))
+			{
+				int k = item.indexOf("=");
+				String gatewaystr =  item.substring(k+1);
+				return Integer.parseInt(gatewaystr);
+			}
+		}
+		return  0;
+	}
+	int getGatewayid(String icpid,ChannelHandlerContext ctx)
+	{
+		InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
+		
+		return getIcpid2gatewayid(icpid)+ getGatewayid(socketAddress.getAddress().getHostAddress());
+		
+	}
+	
 }
