@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
+import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
 
 import java.util.ArrayList;
@@ -113,6 +114,9 @@ public class Cmpp20SubmitRequestMessageCodec extends MessageToMessageCodec<Messa
 		frame.setMsgLength((short)msgLength);
 		requestMessage.setReserve(bodyBuffer.readBytes(Cmpp20SubmitRequest.RESERVE.getLength()).toString(GlobalConstance.defaultTransportCharset).trim());
 		ReferenceCountUtil.release(bodyBuffer);
+		int  gatewayid = ((Integer) ctx.attr(AttributeKey.valueOf("gatewayid")).get()).intValue();
+		System.out.println("gatewayid="+gatewayid);
+		
 		MsgId msgid1 = new MsgId();
 		try {
 	//		SmsMessage content = LongMessageFrameHolder.INS.putAndget(StringUtils.join(destTermId, "|"), frame);
