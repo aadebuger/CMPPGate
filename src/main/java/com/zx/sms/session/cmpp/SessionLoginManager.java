@@ -209,6 +209,7 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		int status = validClientMsg(message, childentity);
 		ctx.attr(AttributeKey.valueOf("username")).set( userName);
 		int gatewayid = getGatewayid(userName,ctx);
+		System.out.println("gatewayid="+gatewayid);
 		ctx.attr(AttributeKey.valueOf("gatewayid")).set( gatewayid);
 		
 		// 认证成功
@@ -339,11 +340,11 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		//通知业务handler连接已建立完成
 		ctx.channel().pipeline().fireUserEventTriggered(SessionState.Connect);
 	}
-	int getGatewayid(String ip)
+	public static  int getGatewayid(String ip,String eipstring)
 	{
 	//	int k1 = ipstring.indexOf(":");
 	//	String ip = ipstring.substring(1,k1);
-		String eipstring = System.getenv("ip2gateway");
+	//	String eipstring = System.getenv("ip2gateway");
 		if (eipstring==null)
 				return 0;
 		String [] ipv =eipstring.split(",");
@@ -359,10 +360,10 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		}
 		return  0;
 	}
-	int getIcpid2gatewayid(String icpid)
+	public static int getIcpid2gatewayid(String icpid,String eipstring)
 	{
 
-		String eipstring = System.getenv("icpid2gateway");
+
 		if (eipstring==null)
 				return 0;
 		String [] ipv =eipstring.split(",");
@@ -378,11 +379,14 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		}
 		return  0;
 	}
-	int getGatewayid(String icpid,ChannelHandlerContext ctx)
+	public static int getGatewayid(String icpid,ChannelHandlerContext ctx)
 	{
 		InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 		
-		return getIcpid2gatewayid(icpid)+ getGatewayid(socketAddress.getAddress().getHostAddress());
+		String eipstring = System.getenv("ip2gateway");
+		String eipstring1 = System.getenv("icpid2gateway");
+		
+		return getIcpid2gatewayid(icpid,eipstring1)+ getGatewayid(socketAddress.getAddress().getHostAddress(),eipstring);
 		
 	}
 	
