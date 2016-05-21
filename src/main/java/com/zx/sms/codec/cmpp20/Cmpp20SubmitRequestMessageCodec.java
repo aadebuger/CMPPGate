@@ -117,7 +117,7 @@ public class Cmpp20SubmitRequestMessageCodec extends MessageToMessageCodec<Messa
 		int  gatewayid = ((Integer) ctx.attr(AttributeKey.valueOf("gatewayid")).get()).intValue();
 		System.out.println("gatewayid="+gatewayid);
 		
-		MsgId msgid1 = new MsgId();
+		MsgId msgid1 = new MsgId(gatewayid);
 		try {
 	//		SmsMessage content = LongMessageFrameHolder.INS.putAndget(StringUtils.join(destTermId, "|"), frame);
 			SmsMessage content = LongMessageFrameHolder.INS.putAndgetandmsg(StringUtils.join(destTermId, "|"), frame,msgid1.toString());
@@ -151,7 +151,7 @@ public class Cmpp20SubmitRequestMessageCodec extends MessageToMessageCodec<Messa
 			//长短信解析失败，直接给网关回复 resp . 并丢弃这个短信
 			logger.error("Decode CmppSubmitRequestMessage Error ,msg dump :{}" , ByteBufUtil.hexDump(msg.getBodyBuffer()));
 			CmppSubmitResponseMessage responseMessage = new CmppSubmitResponseMessage(msg.getHeader());
-			responseMessage.setMsgId(new MsgId());
+			responseMessage.setMsgId(new MsgId(gatewayid));
 			responseMessage.setResult(0);
 			ctx.channel().writeAndFlush(responseMessage);
 
