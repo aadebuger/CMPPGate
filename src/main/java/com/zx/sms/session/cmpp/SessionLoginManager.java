@@ -386,8 +386,33 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		String eipstring = System.getenv("ip2gateway");
 		String eipstring1 = System.getenv("icpid2gateway");
 		
-		return getIcpid2gatewayid(icpid,eipstring1)+ getGatewayid(socketAddress.getAddress().getHostAddress(),eipstring);
+		int gid = getIcpid2gatewayid(icpid,eipstring1)+ getGatewayid(socketAddress.getAddress().getHostAddress(),eipstring);
+		if (gid ==0)
+			return getNewgatewayid(ctx);
+		return gid;
 		
 	}
 	
+	public static int getNewgatewayid(ChannelHandlerContext ctx)
+	{
+		InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
+		
+		
+		return ip2int(socketAddress.getAddress().getHostAddress());
+	}
+	public static  int ip2int(String ipaddress)
+	{
+		int  ipNumbers = 0;
+		int[] ip = new int[4];
+		
+		String[] parts = ipaddress.split("\\.");
+		for (int i = 0; i < 4; i++) {
+		    ip[i] = Integer.parseInt(parts[i]);
+		}
+		for (int i = 2; i < 4; i++) {
+		    ipNumbers += ip[i] << (24 - (8 * i));
+		}
+		return ipNumbers;
+	}
+
 }
