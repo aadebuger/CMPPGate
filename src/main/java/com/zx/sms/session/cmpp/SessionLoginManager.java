@@ -405,6 +405,7 @@ public class SessionLoginManager extends ChannelHandlerAdapter {
 		int  ipNumbers = 0;
 		int[] ip = new int[4];
 		
+		System.out.println("ipaddress="+ipaddress);
 		String[] parts = ipaddress.split("\\.");
 		for (int i = 0; i < 4; i++) {
 		    ip[i] = Integer.parseInt(parts[i]);
