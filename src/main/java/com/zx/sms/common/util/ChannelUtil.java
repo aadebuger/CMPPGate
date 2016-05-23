@@ -24,6 +24,12 @@ public class ChannelUtil {
 		EndpointConnector connector = EndpointManager.INS.getEndpointConnector(entity);
 		return asyncWriteToEntity(connector,msg,null);
 	}
+	public static ChannelFuture asyncWriteToEntity(final Channel ch  , final Object msg) {
+		
+
+		return asyncWriteToChannel(ch,msg,null);
+	}
+	
 	
 	public static ChannelFuture asyncWriteToEntity(final String entity, final Object msg) {
 		
@@ -76,5 +82,35 @@ public class ChannelUtil {
 		return null;
 	}
 	
+	private static ChannelFuture asyncWriteToChannel(Channel ch,final Object msg ,GenericFutureListener listner ){
+		int i = 5;
+			// 端口上还没有可用连接
+			if (ch == null)
+				return null;
 
+			if (ch.isActive() && ch.isWritable()) {
+
+				ChannelFuture future = ch.writeAndFlush(msg);
+				if(listner==null){
+					future.addListener(new GenericFutureListener<ChannelFuture>() {
+						@Override
+						public void operationComplete(ChannelFuture future) throws Exception {
+							// 如果发送消息失败，记录失败日志
+							if (!future.isSuccess()) {
+								StringBuilder sb = new StringBuilder();
+								sb.append("SendMessage ").append(msg.toString()).append(" Failed. ");
+								logger.error(sb.toString(), future.cause());
+							}
+						}
+					});
+				}else{
+					future.addListener(listner);
+				}
+
+				return future;
+			}
+		
+		return null;
+	}
+	
 }
